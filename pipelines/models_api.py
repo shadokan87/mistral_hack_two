@@ -9,10 +9,10 @@ load_dotenv()
  #{"role": "assitant", "content": answer},
  #{"role": final_prompt}]
 
-def mistral_call(text_input,
-                 message_prompts,
-                 base64_image=None,
-                 output_type=None):
+async def mistral_call(text_input,
+                       message_prompts,
+                       base64_image=None,
+                       output_type=None):
     
     model = "mistral-large-latest"
 
@@ -42,7 +42,7 @@ def mistral_call(text_input,
     if output_type=="json":
         args_call["response_format"] = {"type": "json_object"}
     try:
-        chat_response = client.chat.complete(**args_call)
+        chat_response = await client.chat.complete(**args_call)
         return chat_response.choices[0].message.content
 
     except Exception as e:
