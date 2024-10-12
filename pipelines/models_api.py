@@ -14,21 +14,23 @@ class PROMPTS:
      <instructions>
      Must return the following: 
      - brand: brand name.
-     - product_name: product name, if it doesnt exist then fill with None.
+     - brand_name_item_name: product name, if it doesnt exist then fill with None.
      - type: type of the product.
-     - is_natural: True if product natural or False.
+     - food_name: food name of the product.
 
      <examples>
      ---------
      Name detected: Coca-cola zero
      example_1: {
          "brand": "coca-cola",
-         "product_name": "soda",
+         "brand_name_item_name": "soda",
+         "food_name": None,
          "type": "soda"}
      
      example_2: {
          "brand": None,
-         "product_name": "banana",
+         "brand_name_item_name": None,
+         "food_name": "banana",
          "type": "fruit"}
      </examples>
 
@@ -43,20 +45,25 @@ class PROMPTS:
     system_prompt_identification = """You are a helpful assistant that enables us to identify if the product is a natural fruit, vegetable.
     <example>:
     input={"brand": "le pressoir du pays basque",
-            "product_name": "pomme framboise",
+            "brand_name_item_name": "pomme framboise",
+            "food_name": None,
             "type": "juice"}
+
     output={"brand": "le pressoir du pays basque",
-            "product_name": "pomme framboise",
+            "brand_name_item_name": "pomme framboise",
             "type": "juice",
+            "food_name": None,
             "is_natural": False,
             "name": None}
 
     input={"brand": "banana",
-            "product_name": None,
+            "brand_name_item_name": None,
+            "food_name": None,
             "type": "fruit"}
 
     output={"brand": "banana",
-            "product_name": None,
+            "brand_name_item_name": None,
+            "food_name": None,
             "type": "fruit",
             "is_natural": True,
             "name": "banana"}

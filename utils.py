@@ -15,7 +15,9 @@ def encode_image(image_path):
     
 def bytes_to_json(response):
     "Transform bytes response to json"
+    print(response)
     my_json = response.content.decode('utf8').replace("'", '"')
+    print(my_json)
     data = json.loads(my_json)
     tf_data = json.dumps(data, indent=4, sort_keys=True)
 
