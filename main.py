@@ -12,6 +12,7 @@ for img in data:
 
     encoded_image = encode_image(image_path=image_path)
 
-    chat_response, messages = mistral_call(text_input=PROMPTS.user_prompt_detection,
-                                       base64_image=encoded_image)
-    print(chat_response)
+    chat_response = mistral_call(text_input=PROMPTS.user_prompt_detection,
+                                           base64_image=encoded_image,
+                                           output_type="json")
+    print(chat_response[0])

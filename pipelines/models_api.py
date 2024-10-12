@@ -15,7 +15,9 @@ class PROMPTS:
      - descriptor: description of the subname/type of the product. Add it only if you detect it in the image provided else fill it with None.
      Example:
      Name detected: Coca-cola zero
-     {"brand": "coca-cola", "descriptor": "zero"}
+     {"brand": "coca-cola",
+     "descriptor": "zero"}
+     In proper JSON format.
      </instructions>
      
      OBLIGATORY:
@@ -50,14 +52,15 @@ def mistral_call(text_input,
         messages[1]["content"].append(image_message)
 
     # Get the chat response
+    args_call = {
+        "model": model,
+        "messages": messages}
+
+    if output_type=="json":
+        args_call["response_format"] = {"type": "json_object"}
     try:
-        chat_response = client.chat.complete(
-            model=model,
-            messages=messages,
-            response_format = {
-                "type": "json_object"}
-        )
+        chat_response = client.chat.complete(**args_call)
         return chat_response.choices[0].message.content, messages
 
     except Exception as e:
-        return e
+        return (e,)

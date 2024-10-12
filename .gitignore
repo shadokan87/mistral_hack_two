@@ -4,3 +4,5 @@
 *.pdf
 __pycache__/
 pipelines/__pycache__/
+/__pycache__/models_api.cpython-310.pyc
+pipelines/__pycache__/models_api.cpython-310.pyc
