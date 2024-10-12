@@ -7,10 +7,19 @@ load_dotenv()
 
 class PROMPTS:
     system_prompt_detection="""You are a helpful assistant that enables us to extract brand names using entity identification.
-     Only return the brand name and with the type.
-     output format must be respected in all calls:
-     brand:descriptor
-     descriptor is the definition description of the product which specific version of the product.
+     Only return the brand name and the specific descriptor of the product type.
+     
+     <instructions>
+     Must return the following: 
+     - brand: brand name.
+     - descriptor: description of the subname/type of the product. Add it only if you detect it in the image provided else fill it with None.
+     Example:
+     Name detected: Coca-cola zero
+     {"brand": "coca-cola", "descriptor": "zero"}
+     </instructions>
+     
+     OBLIGATORY:
+     YOU MUST RESPECT THE OUTPUT FORMAT. If the output does not have the format provided the examples as a json it will be an error.
      """
     user_prompt_detection="Extract the name of the brand."
 
@@ -18,7 +27,7 @@ class PROMPTS:
 
 def mistral_call(text_input,
                  base64_image=None,
-                 mode="detection"):
+                 output_type=None):
     model = "pixtral-12b-2409"
     client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
 
@@ -40,13 +49,13 @@ def mistral_call(text_input,
 
         messages[1]["content"].append(image_message)
 
-    print(messages)
-
     # Get the chat response
     try:
         chat_response = client.chat.complete(
             model=model,
             messages=messages,
+            response_format = {
+                "type": "json_object"}
         )
         return chat_response.choices[0].message.content, messages
 

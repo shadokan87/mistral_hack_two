@@ -2,3 +2,5 @@
 /data
 
 *.pdf
+__pycache__/
+pipelines/__pycache__/
