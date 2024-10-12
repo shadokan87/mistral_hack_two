@@ -23,15 +23,15 @@ for img in data:
 
         # Model to detect type of product 
         detection_response = mistral_call(text_input=PROMPTS.user_prompt_detection,
-                                        system_prompt=PROMPTS.system_prompt_detection,
+                                          message_prompts=PROMPTS.detection_message_prompts,
                                         base64_image=encoded_image,
                                         output_type="json")
-
+        print(detection_response)
         # Model to detect if it is a natural nutrient
         identification_user_prompt = PROMPTS.user_prompt_identification + "\n" + detection_response
         identified_response = mistral_call(text_input=identification_user_prompt,
-                                        system_prompt=PROMPTS.system_prompt_identification,
-                                        output_type="json")
+                                           message_prompts=PROMPTS.identification_message_prompts,
+                                           output_type="json")
 
         identified_json = json.loads(identified_response)
 
@@ -48,10 +48,21 @@ for img in data:
         logging.info(nutrients_json)
 
         if isinstance(nutrients_json, dict):
-            nutrients_json = f"""{nutrients_json}"""
-        user_prompt_generation = product_name + "\n"+ PROMPTS.user_prompt_generation + "\n" + nutrients_json
+            nutrients_json = f"""Content of the product:
+                                ----------------------
+                                {nutrients_json}"""
+
+        user_prompt_generation = product_name + "\n\n" + nutrients_json + "\n\n"
+        
+        # MUST ADD THIS DATA USING API FROM FRONTEND
+        # part to add user_data from formlare
+        # if user_data:
+        #   user_data = get_request(json)
+        # add to prompt
+        # user_data =     
+        
         generated_response = mistral_call(text_input=user_prompt_generation,
-                                           system_prompt=PROMPTS.system_prompt_generation)
+                                           message_prompts=PROMPTS.generation_report_message_prompts)
 
         logging.info(generated_response)
     

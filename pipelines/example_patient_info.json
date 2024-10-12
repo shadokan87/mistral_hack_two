@@ -1,0 +1,33 @@
+{
+    "age": 55,
+    "physical_measurements": {
+      "height": 170,
+      "weight": 85,
+      "BMI": 29.4
+    },
+    "blood_type": "O+",
+    "diabetes_status": {
+      "patient_diagnosed": true,
+      "family_history": "Yes, mother had type 2 diabetes"
+    },
+    "symptoms": {
+      "increased_thirst": true,
+      "frequent_urination": true,
+      "unexplained_weight_loss": false,
+      "fatigue": true,
+      "blurred_vision": true
+    },
+    "lifestyle_factors": {
+      "diet": "High in carbohydrates and sugars",
+      "physical_activity_frequency": "Rarely exercises"
+    },
+    "medical_history": {
+      "medications": ["Metformin 500mg twice daily"],
+      "other_conditions": ["Hypertension"]
+    },
+    "recent_tests": {
+      "fasting_blood_sugar": 158,
+      "HbA1c": 8.2
+    }
+  }
+  

@@ -22,3 +22,8 @@ def bytes_to_json(response):
     tf_data = json.dumps(data, indent=4, sort_keys=True)
 
     return tf_data
+
+def load_json(file_path):
+    with open(file_path, 'r') as json_file:
+        json_object = json.load(json_file)
+        return (json_object)
