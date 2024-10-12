@@ -1,6 +1,8 @@
 # to test script and pipelines
 
-from pipelines.models_api import PROMPTS, mistral_call, nutrients_api_call
+from pipelines.models_api import mistral_call
+from pipelines.product_data import nutrients_api_call, extract_product_data, openfood_api
+from pipelines.prompts import PROMPTS
 from utils import encode_image
 import os
 import json
@@ -40,13 +42,17 @@ for img in data:
             nutrients_json = nutrients_api_call(product_name, type="natural")
         else:
             product_name = identified_json["brand"]+" "+identified_json["brand_name_item_name"]
-            nutrients_json = nutrients_api_call(product_name)
+            nutrients_json = openfood_api(product_name=product_name)
+            nutrients_json = extract_product_data(nutrients_json)
 
         logging.info(nutrients_json)
 
+        if isinstance(nutrients_json, dict):
+            nutrients_json = f"""{nutrients_json}"""
         user_prompt_generation = product_name + "\n"+ PROMPTS.user_prompt_generation + "\n" + nutrients_json
         generated_response = mistral_call(text_input=user_prompt_generation,
                                            system_prompt=PROMPTS.system_prompt_generation)
+
         logging.info(generated_response)
     
 
