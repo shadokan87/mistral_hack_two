@@ -1,4 +1,5 @@
 import base64
+import json
 
 def encode_image(image_path):
     """Encode the image to base64."""
@@ -11,3 +12,11 @@ def encode_image(image_path):
     except Exception as e:  # Added general exception handling
         print(f"Error: {e}")
         return None
+    
+def bytes_to_json(response):
+    "Transform bytes response to json"
+    my_json = response.content.decode('utf8').replace("'", '"')
+    data = json.loads(my_json)
+    tf_data = json.dumps(data, indent=4, sort_keys=True)
+
+    return tf_data
