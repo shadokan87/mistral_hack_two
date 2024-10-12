@@ -27,7 +27,7 @@ class PROMPTS:
          "type": "soda"}
      
      example_2: {
-         "brand": "fruit",
+         "brand": None,
          "product_name": "banana",
          "type": "fruit"}
      </examples>
@@ -114,10 +114,13 @@ def mistral_call(text_input,
 
 
 
-def natural_nutrients(query: str):
+def nutrients_api_call(query: str, type="industrial"):
     api_key = os.environ["NUTRITION_API_KEY"]
     app_id = os.environ["NUTRITION_APP_ID"]
-    url = os.environ["NUTRITION_APP_URL"]
+    if type == "natural":
+        url = os.environ["NUTRITION_APP_URL"]
+    else:
+        url = os.environ["SEARCH_INSTANT_APP_URL"]
 
     headers = {
         'Content-Type': 'application/json',
