@@ -14,7 +14,7 @@ data = os.listdir("./data/")
 for img in data:
     image_path = f"./data/{img}"
     print(img)
-    if "nutella" in img:
+    if "milka" in img:
         
         # encoding image to make it work
         encoded_image = encode_image(image_path=image_path)
@@ -36,13 +36,18 @@ for img in data:
         logging.info(identified_json)
 
         if identified_json["is_natural"]:
-            nutrients_json = nutrients_api_call(identified_json["name"], type="natural")
+            product_name = identified_json["name"]
+            nutrients_json = nutrients_api_call(product_name, type="natural")
         else:
-            nutrients_json = nutrients_api_call(identified_json["brand"])
+            product_name = identified_json["brand"]+" "+identified_json["brand_name_item_name"]
+            nutrients_json = nutrients_api_call(product_name)
 
         logging.info(nutrients_json)
 
-    
+        user_prompt_generation = product_name + "\n"+ PROMPTS.user_prompt_generation + "\n" + nutrients_json
+        generated_response = mistral_call(text_input=user_prompt_generation,
+                                           system_prompt=PROMPTS.system_prompt_generation)
+        logging.info(generated_response)
     
 
 

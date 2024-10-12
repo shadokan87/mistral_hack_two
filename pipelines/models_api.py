@@ -74,7 +74,12 @@ class PROMPTS:
     """
     user_prompt_identification="Detect if the product is natural (type of fruit, type of vegetable, dried fruits)"
 
-
+    system_prompt_generation = """You are an expert medical AI assistant that takes in input data of the patient/user + the nutrients of a product,
+    then you advise the user whether it is safe to eat that product.
+    You must generate why they can or cannot eat the product.
+    """
+    
+    user_prompt_generation = """Is it safe for me to eat this product ?"""
 
 def mistral_call(text_input,
                  system_prompt,
