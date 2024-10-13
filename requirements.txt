@@ -7,3 +7,4 @@ langchain_community==0.3.2
 pandas==2.2.3
 fastapi==0.115.2
 hypercorn==0.17.3
+python-multipart==0.0.12
