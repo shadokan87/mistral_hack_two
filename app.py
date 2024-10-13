@@ -92,6 +92,11 @@ async def get_alternatives(generated_response: str):
     alternative["generated_response"] = generated_response
     return alternative
 
+@app.get("/ping")
+async def ping():
+    return {"message": "pong"}
+
+
 @app.post("/simple_chat/")
 async def simple_chat(generated_response,
                       text_input: str,
