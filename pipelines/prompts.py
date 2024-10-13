@@ -126,5 +126,8 @@ class PROMPTS:
                                           {"role": "assistant",
                                            "content": f"{example_generated_answer}"},
                                           {"role": "user"}]
+        simple_assistant_prompt = """You are a HELPFUL assitant, expert in answering questions and requests very accurately and based on real facts.
+    Reduce your hallucinations to the max, if you do not know the answer to a question, you can reply with I do not have the information necessary to answer this question, please provide more context."""
+
         
         

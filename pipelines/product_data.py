@@ -55,6 +55,26 @@ def extract_product_data(product_info):
 
     return product_data
 
+def extract_alternative_data(information):
+    """Extract the exact data from product_info"""
+    # important infor we focus on in the product
+    necessary_info = ["url", "product_name", "additives_tags",
+    "allergens_from_ingredients", "categories",
+    "conservation_conditions", "image_front_url",
+    "ingredients_hierarchy", "ingredients_non_nutritive_sweeteners_n",
+    "ingredients_text", "nutriments", "nutrient_levels", "nutriscore",
+    "nutrition_grade_fr", "nutrition_grade_fr", "origins", "product_name_fr",
+    "serving_quantity"]
+
+    product_data = {}
+
+    for data_tag in necessary_info:
+        if data_tag in list(information.keys()):
+            product_data[data_tag] = information[data_tag]
+        else:
+            product_data[data_tag] = None
+
+    return product_data
 
 def select_subset(products):
     data = pd.DataFrame.from_dict(products[0]["nutriments"], orient="index").T
@@ -88,6 +108,6 @@ def return_alternatives(product_type):
     filtered_data = filter_products(output_data)
     alternatives = list(filtered_data.index[0:3])
 
-    return {"alternative_products": [product_info["products"][alt] for alt in alternatives]}
+    return {"alternative_products": [extract_alternative_data(product_info["products"][alt]) for alt in alternatives]}
     
     

@@ -8,3 +8,5 @@ pipelines/__pycache__/
 pipelines/__pycache__/models_api.cpython-310.pyc
 pipelines/__pycache__/models_api.cpython-310.pyc
 __pycache__/utils.cpython-310.pyc
+*.png
+*.jpg

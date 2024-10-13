@@ -49,10 +49,8 @@ def mistral_call(text_input,
     except Exception as e:
         return e
 
-
-
-def simple_chat_call(text_input,
-                           output_type=None):
+def simple_chat_call(history_chat,
+                     output_type=None):
     
     model = "mistral-large-latest"
 
@@ -62,15 +60,12 @@ def simple_chat_call(text_input,
     #text_data = [{"type": "text",
     #              "text": text_input}
     #             ]
-    simple_assistant = """You are a HELPFUL assitant, expert in answering questions and requests very accurately and based on real facts.
-    Reduce your hallucinations to the max, if you do not know the answer to a question, you can reply with I do not have the information necessary to answer this question, please provide more context."""
-    messages = [{"role": "system", "content": simple_assistant}, {"role": "user"}]
-    messages[-1]["content"] = text_input
+    
 
     # Get the chat response
     args_call = {
         "model": model,
-        "messages": messages}
+        "messages": history_chat}
 
     if output_type=="json":
         args_call["response_format"] = {"type": "json_object"}
