@@ -10,10 +10,10 @@ load_dotenv()
  #{"role": final_prompt}]
 
 def mistral_call(text_input,
-                       message_prompts,
-                       base64_image=None,
-                       output_type=None):
-    
+                message_prompts,
+                base64_image=None,
+                output_type=None):
+
     model = "mistral-large-latest"
 
     client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])

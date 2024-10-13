@@ -105,8 +105,26 @@ async def simple_chat(generated_response,
                 {"role": "assistant","content": history_chat},
                 {"role": "user"}]
     messages[-1]["content"] = text_input
-    
+    output = {}
     output_text = await simple_chat_call(messages)
+    output["generated_response"] = output_text
 
-    return output_text
-    
+    return output
+
+@app.post("/ocr/")
+async def extract_analysis_data(image: UploadFile = File(...),
+                                text_input=None):
+    file_location = f"analysis/{image.filename}"
+    with open(file_location, "wb+") as file_object:
+        file_object.write(image.file.read())
+    if text_input is None:
+        text_input = """Extract all biological and available info from this image relating to diabetes."""
+    # structure your input
+    extracted_analysis = mistral_call(text_input=text_input,
+                                        message_prompts=PROMPTS.ocr_message_prompts,
+                                        output_type="json")
+    if isinstance(extracted_analysis, str):
+        # Turn str to dict/json object
+        extracted_analysis_json = json.loads(extracted_analysis)
+
+    return extracted_analysis_json
