@@ -6,3 +6,4 @@ openfoodfacts==1.1.4
 langchain_community==0.3.2
 pandas==2.2.3
 fastapi==0.115.2
+hypercorn==4.0.0
