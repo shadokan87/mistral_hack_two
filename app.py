@@ -48,6 +48,7 @@ async def product_identification(detection_json: dict):
     identified_response = mistral_call(text_input=identification_user_prompt,
                                         message_prompts=PROMPTS.identification_message_prompts,
                                         output_type="json")
+    print("HERE", type(identified_response))
     identified_json = json.loads(identified_response)
     return identified_json
 
@@ -57,8 +58,8 @@ async def extract_product_info(identified_json: dict):
     if identified_json["is_natural"]:
         # natural food like banana
         product_name = identified_json["name"]
-        nutrients_json = nutrients_api_call(product_name, type="natural")
-        nutrients_json["product_name"] = product_name
+        nutrients_str = nutrients_api_call(product_name, type="natural")
+        nutrients_json = {"nutrients_json": nutrients_str, "product_name": product_name}
     else:
         # artificial product like nutella
         product_name = identified_json["brand"]+" "+identified_json["brand_name_item_name"]
@@ -67,14 +68,13 @@ async def extract_product_info(identified_json: dict):
         nutrients_json["product_name"] = product_name
 
     return nutrients_json
-
 async def get_report(nutrients_json):
     if isinstance(nutrients_json, dict):
-            nutrients_json = f"""Content of the product:
+        nutrients_prompt = f"""Content of the product:
                                 ----------------------
                                 {nutrients_json}"""
-
-    user_prompt_generation = nutrients_json["product_name"] + "\n\n" + nutrients_json + "\n\n"
+    print("OKK", nutrients_json)
+    user_prompt_generation = nutrients_json["product_name"] + "\n\n" + nutrients_prompt + "\n\n"
     logging.info("#############################")
     logging.info("generating report analysis")
     generated_response = mistral_call(text_input=user_prompt_generation,
@@ -99,13 +99,22 @@ class ImagePayload(BaseModel):
 class Config:
     allow_population_by_field_name = True  # Allow accessing via 'url'
 
+# @app.post("/upload_image/")
+# async def upload_image(image: UploadFile = File(...)):
+#     # Save the uploaded image
+#     file_location = f"uploads/{image.filename}"
+#     with open(file_location, "wb+") as file_object:
+#         file_object.write(image.file.read())
+#     return {"info": f"file '{image.filename}' saved at '{file_location}'"}
 
-@app.api_route("/verify_food/", methods=["GET", "POST"])
-async def verify_food(payload: ImagePayload):
-    image_url = payload.url
-    img_response = process_image_url(image_url)
-    detection_json = product_detection(img_response["url"])
-    identified_json = product_identification(detection_json)
-    nutrients_json = extract_product_info(identified_json)
-    generated_response = get_report(nutrients_json)
+@app.post("/verify_food/")
+async def verify_food(image: UploadFile = File(...)):
+    file_location = f"uploads/{image.filename}"
+    with open(file_location, "wb+") as file_object:
+        file_object.write(image.file.read())
+    
+    detection_json = await product_detection(file_location)
+    identified_json = await product_identification(detection_json)
+    nutrients_json = await extract_product_info(identified_json)
+    generated_response = await get_report(nutrients_json)
     return generated_response
