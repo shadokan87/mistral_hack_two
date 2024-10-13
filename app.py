@@ -34,7 +34,6 @@ async def product_identification(detection_json: dict):
     identified_response = mistral_call(text_input=identification_user_prompt,
                                         message_prompts=PROMPTS.identification_message_prompts,
                                         output_type="json")
-    print("HERE", type(identified_response))
     identified_json = json.loads(identified_response)
 
     return identified_json
@@ -81,7 +80,10 @@ async def verify_food(image: UploadFile = File(...)):
     identified_json = await product_identification(detection_json)
     nutrients_json = await extract_product_info(identified_json)
     generated_response = await get_report(nutrients_json)
-    generated_response["identified_json"] = identified_json
+    if isinstance(identified_json, str):
+        generated_response["identified_json"] = identified_json
+    else:
+        generated_response["identified_json"] = f"{identified_json}"
 
     return generated_response
 
@@ -110,18 +112,11 @@ async def simple_chat(generated_response,
                 {"role": "assistant","content": history_chat},
                 {"role": "user"}]
     messages[-1]["content"] = text_input
-<<<<<<< HEAD
-    
-=======
->>>>>>> ocr
     output = {}
     output_text = await simple_chat_call(messages)
     output["generated_response"] = output_text
 
     return output
-<<<<<<< HEAD
-    
-=======
 
 @app.post("/ocr/")
 async def extract_analysis_data(image: UploadFile = File(...),
@@ -140,4 +135,3 @@ async def extract_analysis_data(image: UploadFile = File(...),
         extracted_analysis_json = json.loads(extracted_analysis)
 
     return extracted_analysis_json
->>>>>>> ocr
