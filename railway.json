@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "hypercorn main:app --bind \"[::]:$PORT\""
+    "startCommand": "mkdir data;mkdir uploads;hypercorn app:app --bind \"[::]:$PORT\""
   }
 }
