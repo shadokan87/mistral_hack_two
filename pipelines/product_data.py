@@ -2,6 +2,7 @@ from utils import bytes_to_json
 import openfoodfacts
 import os
 import requests
+import pandas as pd
 
 def openfood_api(product_name: str,
                  user_agent="MyAwesomeApp/1.0"):
@@ -45,11 +46,42 @@ def extract_product_data(product_info):
     information = product_info["products"][0]
     for data_tag in necessary_info:
         if data_tag in list(information.keys()):
-            if data_tag!="serving_quantity":
-                product_data[data_tag] = information[data_tag]
-            else:
-                product_data[data_tag] = information[data_tag]+information["serving_quantity_unit"]
+            product_data[data_tag] = information[data_tag]
         else:
             product_data[data_tag] = None
 
     return product_data
+
+
+def select_subset(products):
+    data = pd.DataFrame.from_dict(products[0]["nutriments"], orient="index").T
+    for i in range(1, len(products)):
+        new_data = pd.DataFrame.from_dict(products[i]["nutriments"], orient="index").T
+        data = pd.concat((data, new_data), axis=0).reset_index(drop=True)
+    return data.filter(like="100g")
+
+def filter_products(dataset):
+    dataset.dropna(axis=1, inplace=True)
+    # data check
+    columns_to_check = ["carbohydrates_100g",
+                        "sugars_100g","fat_100g",
+                        "saturated-fat_100g"]
+    for col in columns_to_check:
+        if col in list(dataset.columns):
+            continue
+        else:
+            columns_to_check.remove(col)
+
+    dataset.sort_values(columns_to_check,
+                        ascending=True, inplace=True)
+    return dataset
+
+def return_alternatives(product_type):
+    product_info = openfood_api(product_type)
+    output_data = select_subset(product_info["products"])
+    filtered_data = filter_products(output_data)
+    alternatives = list(filtered_data.index[0:3])
+
+    return {"alternative_products": [product_info["products"][alt] for alt in alternatives]}
+    
+    

@@ -100,13 +100,18 @@ class PROMPTS:
         - Explanation of why he can or cannot eat it?
         - Explanation using his personal data.
         - Explain his/her blood analysis in comparison with a healthy human that has the same personal information (weight, height, age, etc).
+        {"is_allowed": exact_answer, "generated_answer": text_report}
+        is_allowed: can take three options only, "no", "yes", "maybe".
+        generated_answer: put the text answer.
+        OBLIGATORY:
+        YOU MUST RESPECT THE OUTPUT FORMAT. If the output does not have the format provided the examples as a json it will be an error.
         """
 
         user_prompt_generation = """Is it safe for me to eat this product ?"""
         # Load examples
-        example_compote = load_json("./pipelines/example_product_info.json")
-        example_patient_diabet = load_json("./pipelines/example_patient_info.json")
-        example_generated_answer = load_json("./pipelines/example_generation_answer.json")
+        example_compote = load_json("./conf/example_product_info.json")
+        example_patient_diabet = load_json("./conf/example_patient_info.json")
+        example_generated_answer = load_json("./conf/example_generation_answer.json")
 
         examples_detection = [# First example prompt input
                                f"""
@@ -119,5 +124,7 @@ class PROMPTS:
         generation_report_message_prompts = [{"role": "user",
                                            "content": system_prompt_generation_product_answer+"\n"+examples_detection[0]},
                                           {"role": "assistant",
-                                           "content": example_generated_answer["generated_answer"]["answer"]},
+                                           "content": f"{example_generated_answer}"},
                                           {"role": "user"}]
+        
+        

@@ -1,7 +1,8 @@
 # to test script and pipelines
 
 from pipelines.models_api import mistral_call
-from pipelines.product_data import nutrients_api_call, extract_product_data, openfood_api
+from pipelines.product_data import (nutrients_api_call, extract_product_data,
+                                    openfood_api, return_alternatives)
 from pipelines.prompts import PROMPTS
 from utils import encode_image
 import os
@@ -34,7 +35,8 @@ for img in data:
                                            output_type="json")
 
         identified_json = json.loads(identified_response)
-
+        logging.info("#############################")
+        logging.info("identified_json")
         logging.info(identified_json)
 
         if identified_json["is_natural"]:
@@ -45,6 +47,8 @@ for img in data:
             nutrients_json = openfood_api(product_name=product_name)
             nutrients_json = extract_product_data(nutrients_json)
 
+        logging.info("#############################")
+        logging.info("nutrients_json")
         logging.info(nutrients_json)
 
         if isinstance(nutrients_json, dict):
@@ -62,10 +66,16 @@ for img in data:
         # user_data =     
         
         generated_response = mistral_call(text_input=user_prompt_generation,
-                                           message_prompts=PROMPTS.generation_report_message_prompts)
-
+                                           message_prompts=PROMPTS.generation_report_message_prompts,
+                                           output_type="json")
+        logging.info("#############################")
+        logging.info("generated_response")
         logging.info(generated_response)
-    
+
+        alternatives = return_alternatives(product_type=identified_json["type"])
+        logging.info("#############################")
+        logging.info("alternatives")
+        logging.info(len(alternatives))
 
 
 
