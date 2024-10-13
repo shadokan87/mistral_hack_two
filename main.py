@@ -17,7 +17,7 @@ data = os.listdir("./data/")
 for img in data:
     image_path = f"./data/{img}"
     print(img)
-    if "milka" in img:
+    if "Tomato" in img:
         
         # encoding image to make it work
         encoded_image = encode_image(image_path=image_path)
@@ -75,7 +75,7 @@ for img in data:
         alternatives = return_alternatives(product_type=identified_json["type"])
         logging.info("#############################")
         logging.info("alternatives")
-        logging.info(len(alternatives))
+        logging.info(len(alternatives["alternative_products"]))
 
 
 

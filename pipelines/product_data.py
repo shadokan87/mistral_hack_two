@@ -14,6 +14,7 @@ def openfood_api(product_name: str,
     return api_json
 
 def nutrients_api_call(query: str, type="industrial"):
+    """Natural foods api call"""
     api_key = os.environ["NUTRITION_API_KEY"]
     app_id = os.environ["NUTRITION_APP_ID"]
     if type == "natural":
@@ -35,6 +36,7 @@ def nutrients_api_call(query: str, type="industrial"):
 
 def extract_product_data(product_info):
     """Extract the exact data from product_info"""
+    # important infor we focus on in the product
     necessary_info = ["url", "product_name", "additives_tags",
     "allergens_from_ingredients", "categories",
     "conservation_conditions", "image_front_url",
@@ -42,6 +44,7 @@ def extract_product_data(product_info):
     "ingredients_text", "nutriments", "nutrient_levels", "nutriscore",
     "nutrition_grade_fr", "nutrition_grade_fr", "origins", "product_name_fr",
     "serving_quantity"]
+
     product_data = {}
     information = product_info["products"][0]
     for data_tag in necessary_info:
@@ -77,6 +80,9 @@ def filter_products(dataset):
     return dataset
 
 def return_alternatives(product_type):
+    """returning max 3 alternatives based off type and their lowest values in
+    critical nutrients to a diabetic
+    """
     product_info = openfood_api(product_type)
     output_data = select_subset(product_info["products"])
     filtered_data = filter_products(output_data)
