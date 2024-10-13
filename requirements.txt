@@ -1,7 +1,7 @@
 mistralai==1.1.0
 ipykernel==6.29.5
 requests==2.32.3
-load_dotenv==1.0.1
+load_dotenv==0.1.0
 openfoodfacts==1.1.4
 langchain_community==0.3.2
 pandas==2.2.3
