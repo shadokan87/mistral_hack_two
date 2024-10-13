@@ -127,7 +127,88 @@ class PROMPTS:
                                            "content": f"{example_generated_answer}"},
                                           {"role": "user"}]
         simple_assistant_prompt = """You are a HELPFUL assitant, expert in answering questions and requests very accurately and based on real facts.
-    Reduce your hallucinations to the max, if you do not know the answer to a question, you can reply with I do not have the information necessary to answer this question, please provide more context."""
+        Reduce your hallucinations to the max, if you do not know the answer to a question, you can reply with I do not have the information necessary to answer this question, please provide more context."""
 
+
+        # OCR blood analysis
+        examples_output_ocr = load_json("./conf/example_ocr_extraction.json")
+
+        assistant_prompt_ocr = """You are an expert medical assistant responsible for extracting and formatting blood analysis data into a structured JSON file. Your task is to analyze an image of a patient's blood test results and produce a single JSON object. 
+        This object must contain two main sections: "blood_test_results" and "risk_levels".
+        **Output Requirements**:
+        - Ensure the entire structure is generated within a single JSON output when extracting from the image.
+        - The entire output must be contained within a single JSON object.
+        - If a test or data point is missing or not found in the image, omit that entry.
+        - Ensure the JSON is well-formatted and properly nested according to the above structure."""
+
+        ocr_blood_analysis = """
+        <blood_test_results>
+        - Extract key blood test metrics, and for each test, include the following information:
+        - value_g/L, value_mmol/L, value_mEq/L, or value_mg/L (depending on the test unit).
+        - The corresponding reference range in the same unit.
+        - Include the following tests, if available:
+            - Triglycerides
+            - Cholesterol (HDL, non-HDL, LDL)
+            - Sodium
+            - Potassium
+            - CRP (C-Reactive Protein)
+        </blood_test_results>
+        """
         
-        
+        ocr_risk_levels = """
+        risk_levels: Extract LDL cholesterol target levels based on cardiovascular risk categories. For each risk category (Very High, High, Moderate, Low), provide:
+        <risk_levels>
+        - The risk score (as a percentage).
+        - A list of clinical situations associated with that risk category.
+        - The corresponding LDL target level for that risk in g/L and mmol/L.
+        </risk_levels>
+
+        """
+        ocr_output_requirements = """
+        {"blood_test_results": {
+            "Triglycerides": {
+            "value_g/L": 0.48,
+            "value_mmol/L": 0.55,
+            "reference_range_g/L": "<1.50",
+            "reference_range_mmol/L": "<1.75"
+            },
+            "Cholesterol_HDL": {
+            "value_g/L": 0.37,
+            "value_mmol/L": 0.95,
+            "reference_range_g/L": ">0.45",
+            "reference_range_mmol/L": ">1.16"
+            },
+            ...
+            },
+            "risk_levels": [
+                {
+                    "level": "Very High",
+                    "score": "≥ 10%",
+                    "clinical_situation": [
+                        "Documented cardiovascular disease",
+                        "Severe chronic renal insufficiency",
+                        ...
+                        ],
+                        "target_ldl": "< 0.7 g/L (1.8 mmol/L)"
+                        },
+                    {
+                        "level": "High",
+                        "score": "5-9%",
+                        "clinical_situation": [
+                            "Type 2 diabetes over 40 years",
+                            "Moderate chronic renal insufficiency",
+                            ...
+                            ],
+                            "target_ldl": "< 1.0 g/L (2.6 mmol/L)"
+                            },
+                            ...
+                            ]
+        }
+        """
+        ocr_message_prompts = [{"role": "user",
+                                "content": assistant_prompt_ocr+"\n"+ocr_blood_analysis+"\n"
+                                            +examples_output_ocr["blood_analysis"]+
+                                            ocr_risk_levels+"\n"
+                                            +examples_output_ocr["risk_levels"]},
+                               {"role": "assistant",
+                                    "content":  ocr_output_requirements}]

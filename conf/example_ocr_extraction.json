@@ -1,0 +1,46 @@
+{
+    "blood_analysis":"""<output_example>
+                        {
+                        'Triglycerides': {
+                            'value_g/L': <value>,
+                            'value_mmol/L': <value>,
+                            'reference_range_g/L': '<upper limit>',
+                            'reference_range_mmol/L': '<upper limit>'
+                        },
+                        'Cholesterol_HDL': {
+                            'value_g/L': <value>,
+                            'value_mmol/L': <value>,
+                            'reference_range_g/L': '>lower limit',
+                            'reference_range_mmol/L': '>lower limit'
+                        },
+                        ...
+                        }
+                        </output_example>""",
+    "risk_levels":"""<output_example>
+        {
+        'risk_levels': [
+            {
+            'level': 'Very High',
+            'score': '≥ 10%',
+            'clinical_situation': [
+                'Documented cardiovascular disease',
+                'Severe chronic renal insufficiency',
+                ...
+            ],
+            'target_ldl': '< 0.7 g/L (1.8 mmol/L)''
+            },
+            {
+            'level': 'High',
+            'score': '5-9%'',
+            'clinical_situation': [
+                'Type 2 diabetes over 40 years',
+                'Moderate chronic renal insufficiency',
+                ...
+            ],
+            'target_ldl': '< 1.0 g/L (2.6 mmol/L)''
+            },
+            ...]
+            }
+        </output_example>
+        """
+}
