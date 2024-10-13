@@ -106,7 +106,9 @@ async def simple_chat(generated_response,
                 {"role": "user"}]
     messages[-1]["content"] = text_input
     
+    output = {}
     output_text = await simple_chat_call(messages)
+    output["generated_response"] = output_text
 
-    return output_text
+    return output
     
