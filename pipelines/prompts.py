@@ -207,8 +207,8 @@ class PROMPTS:
         """
         ocr_message_prompts = [{"role": "user",
                                 "content": assistant_prompt_ocr+"\n"+ocr_blood_analysis+"\n"
-                                            +f"{examples_output_ocr["blood_analysis"]}"+
+                                            +f"{examples_output_ocr['blood_analysis']}"+
                                             ocr_risk_levels+"\n"
-                                            +f"{examples_output_ocr["risk_levels"]}"},
+                                            +f"{examples_output_ocr['risk_levels']}"},
                                {"role": "assistant",
                                     "content":  ocr_output_requirements}]

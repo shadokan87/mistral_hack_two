@@ -36,8 +36,9 @@ async def product_identification(detection_json: dict):
                                         output_type="json")
     if isinstance(identified_response, str):
         identified_json = json.loads(identified_response)
-    else:
+    elif isinstance(identified_response, dict):
         identified_json = identified_response
+    print(identified_json)
     return identified_json
 
 async def extract_product_info(identified_json: dict):
