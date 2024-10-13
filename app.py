@@ -34,7 +34,8 @@ async def product_identification(detection_json: dict):
     identified_response = mistral_call(text_input=identification_user_prompt,
                                         message_prompts=PROMPTS.identification_message_prompts,
                                         output_type="json")
-    identified_json = json.loads(identified_response)
+    if isinstance(identified_response, str):
+        identified_json = json.loads(identified_response)
 
     return identified_json
 
