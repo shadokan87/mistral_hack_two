@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "hypercorn main:app --bind \"[::]:$PORT\""
+    "startCommand": "pip install hypercorn && hypercorn main:app --bind \"[::]:$PORT\""
   }
 }
